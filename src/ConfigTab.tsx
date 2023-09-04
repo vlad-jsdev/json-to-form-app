@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 interface ConfigTabProps {
 	onGenerateForm: (config: string) => void;
+	setConfigData: (config: string) => void;
 	errorShow: string;
 	val: string;
 }
 
-const ConfigTab: React.FC<ConfigTabProps> = ({ val, onGenerateForm, errorShow }) => {
-	const [config, setConfig] = useState<string>(val);
+const ConfigTab: React.FC<ConfigTabProps> = ({ val, onGenerateForm, errorShow, setConfigData }) => {
 
 	const handleGenerateClick = () => {
-		onGenerateForm(config);
+		onGenerateForm(val);
 	};
+	const handleChange:  React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
+		setConfigData(e.target.value)
+	}
 
 	return (
 		<div>
@@ -19,8 +22,8 @@ const ConfigTab: React.FC<ConfigTabProps> = ({ val, onGenerateForm, errorShow })
 			<textarea
 				rows={10}
 				cols={50}
-				value={config}
-				onChange={(e) => setConfig(e.target.value)}
+				value={val}
+				onChange={handleChange}
 			/>
 			{errorShow && <h3 className='error-msg'>{errorShow}</h3>}
 			<button onClick={handleGenerateClick}>Generate Form</button>

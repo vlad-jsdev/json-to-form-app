@@ -27,26 +27,40 @@ function App() {
 
   const handleGenerateForm = (config: string) => {
     try {
-      const parsedConfig = JSON.parse(config);
-      if (!parsedConfig.items) {
-        setTab(0);
-        showError('Error parsing config JSON, please write valid JSON data');
+      const parsedConfig = parseJSON(config);
+
+      if (!parsedConfig) {
+        showError('Invalid JSON format. Please enter valid JSON data.');
         return;
       }
-      setConfigData(config);
-      if (parsedConfig.title && typeof parsedConfig.title === 'string') {
-        setTitle(parsedConfig.title);
+
+      if (!parsedConfig.items) {
+        handleConfigError('JSON does not contain "items" property. Please check your JSON data.');
+      } else {
+        setConfigData(config);
+        setTitle(parsedConfig.title || '');
+        setFormData(parsedConfig.items);
+        setTab(1);
       }
-      else {
-        setTitle('');
-      }
-      setFormData(parsedConfig.items);
-      setTab(1);
     } catch (error) {
       console.error('Error parsing config JSON', error);
-      showError('Error parsing config JSON, please write valid JSON data');
+      showError('Error parsing config JSON. Please write valid JSON data.');
     }
   };
+
+  const parseJSON = (jsonString: string) => {
+    try {
+      return JSON.parse(jsonString);
+    } catch {
+      return null;
+    }
+  };
+
+  const handleConfigError = (errorMessage: string) => {
+    showError(errorMessage);
+    setTab(0); // Set tab to 0 in case of a config error
+  };
+
 
 
   return (
@@ -60,6 +74,7 @@ function App() {
         <ConfigTab
           val={configData}
           onGenerateForm={handleGenerateForm}
+          setConfigData={setConfigData}
           errorShow={errorMsg}
         />
       </TabPanel>

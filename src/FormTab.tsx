@@ -30,13 +30,7 @@ const FormTab: React.FC<FormTabProps> = ({ formData, title }) => {
 							{field.type === 'numeric' && <input type="number" />}
 							{field.type === 'multi-line' && <textarea />}
 							{field.type === 'boolean' && <input type="checkbox" />}
-							{field.type === 'enum' && (
-								<select>
-									<option value="option1">Option 1</option>
-									<option value="option2">Option 2</option>
-									{/* Add more options as needed */}
-								</select>
-							)}
+							{field.type === 'enum' && <input type="radio" />}
 						</div>
 					</div>
 				))}
